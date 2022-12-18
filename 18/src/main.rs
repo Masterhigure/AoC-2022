@@ -15,6 +15,12 @@ pub fn read_input(filename: &str) -> Input {
 }
 
 pub fn task_one(i: Input) -> i32 {
+    // The set sides contains _all_ sides of all cubes of the droplet (indexed by
+    // direction of face and the position of the cube that's to the
+    // left of / above / behind that face. And count counts
+    // the number of sides that have been added twice, which are all the
+    // shared sides. Subtract to get answer.
+
     let mut count = 0;
     let mut sides: HashSet<(i32, (i32, i32, i32))> = HashSet::new();
     for &c in &i {
