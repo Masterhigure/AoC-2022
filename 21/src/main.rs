@@ -9,14 +9,14 @@ pub enum Operation {
     Div,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub enum Monkey {
-    Number(i64),
+    Number(f64),
     Operation(String, Operation, String),
 }
 
 impl Monkey {
-    fn value(&self, monkeys: &HashMap<String, Monkey>) -> i64 {
+    fn value(&self, monkeys: &HashMap<String, Monkey>) -> f64 {
         match self {
             Self::Number(i) => *i,
             Self::Operation(n1, o, n2) => {
@@ -63,11 +63,11 @@ pub fn read_input(filename: &str) -> Input {
         .collect::<HashMap<_, _>>()
 }
 
-pub fn task_one(i: Input) -> i64 {
+pub fn task_one(i: Input) -> f64 {
     i.get("root").unwrap().value(&i)
 }
 
-pub fn task_two(mut i: Input) -> i64 {
+pub fn task_two(mut i: Input) -> f64 {
     if let Monkey::Operation(m1, _, m2) = i.get("root").unwrap().clone() {
         i.insert(
             "root".to_string(),
@@ -76,19 +76,19 @@ pub fn task_two(mut i: Input) -> i64 {
     } else {
         unreachable!();
     }
-    let mut step = 739;
+    let mut step = 100.0;
     loop {
         let d1 = i.get("root").unwrap().value(&i);
         let &Monkey::Number(v) = i.get("humn").unwrap() else { unreachable!()};
         i.insert("humn".to_string(), Monkey::Number(v + step));
         let d2 = i.get("root").unwrap().value(&i);
-        if d2 == 0 {
+        if d2.abs() < 0.01 {
             return v + step;
-        } else if d1 == 0 {
+        } else if d1.abs() < 0.01 {
             return v;
         } else if d1 == d2 {
-            if step < 100 {
-                step *= 10;
+            if step < 100.0 {
+                step *= 10.0;
             } else {
                 panic!();
             }
@@ -98,8 +98,8 @@ pub fn task_two(mut i: Input) -> i64 {
             "humn".to_string(),
             Monkey::Number(v + step * d1 / (d1 - d2)),
         );
-        if step > 1 {
-            step = 1.max(step / 3);
+        if step / (d1 - d2).abs() < 3.0 {
+            step /= 3.0;
         }
     }
 }
@@ -117,7 +117,7 @@ mod test {
     #[test]
     fn test_main() {
         let input = read_input("example.txt");
-        assert_eq!(task_one(input.clone()), 152);
-        assert_eq!(task_two(input), 301);
+        assert_eq!(task_one(input.clone()), 152.0);
+        assert_eq!(task_two(input), 301.0);
     }
 }
