@@ -226,8 +226,10 @@ mod test {
     #[test]
     fn test_two() {
         let input = read_input("example.txt");
-        // Task two is intimately connected to
-        // the exact shape of the net
+        // The ask two solution is intimately connected to
+        // the exact shape of the net.
+        // The example and my input don't have the same
+        // shape so it won't work.
         //assert_eq!(task_two(input), 5031);
     }
 }
